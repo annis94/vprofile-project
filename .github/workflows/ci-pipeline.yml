@@ -1,0 +1,43 @@
+name: Basic CI Pipeline for vProfile
+
+# Déclencheurs (Triggers)
+on:
+  push:
+    branches: [ main ] # Déclenche sur les push vers la branche 'main'
+  pull_request:
+    branches: [ main ] # Déclenche aussi sur les pull requests vers 'main'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Spécifie que le job s'exécute sur une machine virtuelle Ubuntu fournie par GitHub
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Action officielle de GitHub pour récupérer ton code
+
+      - name: Set up JDK 11 (si besoin pour Maven/Java)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11' # Ajuste la version de Java si nécessaire pour ton projet
+          distribution: 'temurin' # Une distribution populaire de Java
+
+      - name: Build with Maven (Exemple, si tu utilises Maven)
+        run: mvn -B package --file pom.xml # Remplace par ta commande de build/test
+        # Si tu n'utilises pas Maven, on peut mettre autre chose ici.
+        # Par exemple, une simple vérification que certains fichiers existent:
+        # run: |
+        #   ls -l src
+        #   echo "Tests basiques passés (simulation)"
+
+      # Étape de test simple (si pas de Maven ou tests unitaires existants)
+      # Tu peux décommenter ceci et commenter l'étape Maven si tu veux commencer plus simple
+      # - name: Run a simple test
+      #   run: |
+      #     echo "Exécution d'un test simple..."
+      #     # Vérifie si un fichier important existe (par exemple)
+      #     if [ -f "src/main/webapp/login.jsp" ]; then
+      #       echo "Le fichier login.jsp existe. Test OK."
+      #     else
+      #       echo "ERREUR: Le fichier login.jsp est manquant !"
+      #       exit 1 # Fait échouer le workflow
+      #     fi
